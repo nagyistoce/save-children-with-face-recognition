@@ -20,11 +20,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.Android.R;
 import com.Android.peopleRecognize.Preview;
 
-public class cameraDemo extends Activity {
+public class CameraMain extends Activity {
 	private static final String TAG = "CameraDemo";
-	Camera camera;
+	CameraMain camera;
 	Preview preview;
 	Button buttonClick;
 	
@@ -35,7 +36,7 @@ public class cameraDemo extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.camera);
 		Log.d(TAG, "begin");
 		preview = new Preview(this);//get the picture
 		((FrameLayout) findViewById(R.id.preview)).addView(preview);
@@ -52,11 +53,10 @@ public class cameraDemo extends Activity {
 		buttonClick = (Button) findViewById(R.id.buttonClick);
 		buttonClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				preview.camera.takePicture(shutterCallback, rawCallback,
-						jpegCallback);
+				preview.camera.takePicture(shutterCallback, rawCallback,jpegCallback);
 				if(jpegCallback != null)
 				{
-					new AlertDialog.Builder(cameraDemo.this)
+					new AlertDialog.Builder(CameraMain.this)
 					.setMessage("ÊÇ·ñÉÏ´«?")
 					.setPositiveButton(R.string.ok,new android.content.DialogInterface.OnClickListener(){
 						public void onClick(
@@ -84,20 +84,24 @@ public class cameraDemo extends Activity {
 
 	/** Handles data for raw picture */
 	PictureCallback rawCallback = new PictureCallback() {
+		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
+			// TODO Auto-generated method stub
 			Log.d(TAG, "onPictureTaken - raw");
 		}
 	};
 
 	/** Handles data for jpeg picture */
 	PictureCallback jpegCallback = new PictureCallback() {
+		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
+			// TODO Auto-generated method stub
 			FileOutputStream outStream = null;
 			try {
 			//	String pathName="/sdcard/faceRecognizeImageFile/";
 			    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");     
 			    String fileName = sDateFormat.format(new java.util.Date());  		    
-			    Log.d("testing", fileName);
+			    Log.d(TAG + "testing", fileName);
 			    //Toast.makeText(cameraDemo.this, fileName, Toast.LENGTH_LONG);
 				// write to local sandbox file system
 				// outStream = CameraDemo.this.openFileOutput(String.format("%d.jpg",System.currentTimeMillis()), 0);
