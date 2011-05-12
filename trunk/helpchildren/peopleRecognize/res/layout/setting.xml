@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	android:id="@+id4/setting"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+	
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="50px"
+		>
+	</RelativeLayout>
+	
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="300px"
+		android:background="#ffffffff"
+		android:orientation="vertical"
+		>
+		<ScrollView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			>
+			<LinearLayout
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical"
+			    >
+			  	<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal"
+					>
+				  	<TextView 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:text="软件主题：" 
+					android:textColor="#ff000000"
+					/>
+				  	<Spinner  
+					android:id="@+id/theme_spinner"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:drawSelectorOnTop="false"				
+				  	/>
+				</TableRow>
+				
+				<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal"
+					>
+					<TextView 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:text="自动登陆：" 
+					android:textColor="#ff000000"
+					/>
+					<Spinner  
+					android:id="@+id/autologin_spinner"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:drawSelectorOnTop="false"
+					/>
+				</TableRow>
+				
+				<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal"
+					>
+					<TextView 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:text="记住密码：" 
+					android:textColor="#ff000000"
+					/>
+					<Spinner  
+					android:id="@+id/pwd_spinner"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:drawSelectorOnTop="false"
+					/>
+				</TableRow>
+			</LinearLayout>
+		</ScrollView>
+	</LinearLayout>
+	
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+		<Button
+			android:id="@+id/setting_reservedbtn" 
+			android:layout_width="100px"
+			android:layout_height="50px"
+			android:text="保  存" 
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			>
+			</Button>
+			<Button
+			android:id="@+id/setting_returnbtn" 
+			android:layout_width="100px"
+			android:layout_height="50px"
+			android:text="返  回"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			>
+		</Button>
+	</RelativeLayout>
+</LinearLayout>
