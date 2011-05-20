@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.Android.R;
+import com.Android.googleearth.GPSManager;
+import com.Android.main.Main;
 import com.Android.peopleRecognize.GetImage.PictureNode;
 import com.Android.peopleRecognize.Preview;
 
@@ -41,6 +43,7 @@ public class CameraMain extends Activity {
 	
 	private CameraMain camera;
 	private Preview preview;
+	private GPSManager mGpsManager;
 	
 	private Button buttonClick;
 	private Button buttonUpload;
@@ -67,6 +70,8 @@ public class CameraMain extends Activity {
 		Log.d(TAG, "begin");
 		preview = new Preview(this);//get the picture
 		((FrameLayout) findViewById(R.id.preview)).addView(preview);
+		
+		mGpsManager = Main.mGpsManager;
 		
 		//如果用于保存数据库文件的目录不存在则创建目录
 		File dir = new File(IMAGE_PATH);
@@ -104,10 +109,9 @@ public class CameraMain extends Activity {
 					.setPositiveButton(R.string.ok,new android.content.DialogInterface.OnClickListener(){
 						public void onClick(
 								DialogInterface dialoginterface, int i){
-							Log.d(TAG, "select photo");
-							//get current location
+							Log.d(TAG, "select photo");													
 							showDialog(DIALOG1);
-						}
+						}						
 					}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
 						public void onClick(
 								DialogInterface dialoginterface, int i){
@@ -126,6 +130,8 @@ public class CameraMain extends Activity {
 	
 	
 	private Dialog buildDialog1(Context context) {
+		//get current location	
+		getCurrenLocation();
 		LayoutInflater inflater = LayoutInflater.from(this);
 		final View textEntryView = inflater.inflate(
 				R.layout.upload_dialog, null);
@@ -187,6 +193,24 @@ public class CameraMain extends Activity {
 		return builder.create();	
 	};
 	
+	private void getCurrenLocation() {
+		// TODO Auto-generated method stub
+		if( mGpsManager.isGPSEnable() && mGpsManager.getCurrentLocation() == null ){
+			Toast.makeText(this, "正在获取您的位置，请稍候……", Toast.LENGTH_SHORT).show();						
+		}else if( mGpsManager.isGPSEnable() && mGpsManager.getCurrentLocation() != null ){			
+			StringBuffer msg = new StringBuffer();
+    		//获取经纬度
+    		msg.append("Latitude: ");
+    		msg.append(Double.toString(mGpsManager.getCurrentLocation().getLatitude()));
+    		
+    		msg.append(", Longitude: ");
+    		msg.append(Double.toString(mGpsManager.getCurrentLocation().getLongitude()));  		
+//    		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    		address = msg.toString();
+    		detail[0] = address;
+		}
+	}
+
 	ShutterCallback shutterCallback = new ShutterCallback() {
 		public void onShutter() {
 			Log.d(TAG, "onShutter'd");

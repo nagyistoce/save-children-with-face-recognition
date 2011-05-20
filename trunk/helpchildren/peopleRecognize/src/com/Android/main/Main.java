@@ -2,6 +2,7 @@ package com.Android.main;
 
 import com.Android.R;
 import com.Android.app.AppMain;
+import com.Android.googleearth.GPSManager;
 import com.Android.peopleRecognize.CameraMain;
 import com.Android.weibo.WeiboMain;
 
@@ -26,7 +27,9 @@ public class Main extends TabActivity {
 	private final static String TAB_CAMERA = "Camera";
 	private final static String TAB_WEIBO = "Weibo";
 	private final static String TAB_APP = "App";
-
+	
+	public static GPSManager mGpsManager;
+	
 	TabHost mTabHost;
 	TabHost.TabSpec mSpec;
 	
@@ -78,10 +81,10 @@ public class Main extends TabActivity {
         
         mTabHost.setOnTabChangedListener( new MyOnTabChangeListener());
         
-//        mGpsManager = new GPSManager(this);
-//        if( !mGpsManager.isGPSEnable() ){
-//        	Toast.makeText(this, "GPS尚未打开，无法获得当前位置", Toast.LENGTH_SHORT).show();
-//        }
+        mGpsManager = new GPSManager(this);
+        if( !mGpsManager.isGPSEnable() ){
+        	Toast.makeText(this, "GPS尚未打开，无法获得当前位置", Toast.LENGTH_SHORT).show();
+        }
     }
     @Override
     public void onDestroy(){
