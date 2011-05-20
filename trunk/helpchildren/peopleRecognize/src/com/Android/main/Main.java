@@ -18,9 +18,10 @@ import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 public class Main extends TabActivity {
-	private final static String TAG = "Main";
+	private final static String TAG = "Main";	
 	
 	private final static String TAB_CAMERA = "Camera";
 	private final static String TAB_WEIBO = "Weibo";
@@ -38,6 +39,7 @@ public class Main extends TabActivity {
 	int mScreenHeight;
 	int mScreenWidth;
 	
+//	public static GPSManager mGpsManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,17 @@ public class Main extends TabActivity {
         mTabHost.addTab(mSpec);     
         
         mTabHost.setOnTabChangedListener( new MyOnTabChangeListener());
+        
+//        mGpsManager = new GPSManager(this);
+//        if( !mGpsManager.isGPSEnable() ){
+//        	Toast.makeText(this, "GPS尚未打开，无法获得当前位置", Toast.LENGTH_SHORT).show();
+//        }
+    }
+    @Override
+    public void onDestroy(){
+//    	if( mGpsManager!=null )
+//    		mGpsManager.stopGps();
+    	super.onDestroy();
     }
     
     @Override
