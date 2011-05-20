@@ -10,13 +10,29 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 	</FrameLayout>
-
-	<Button 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-		android:id="@+id/buttonClick"
-		android:text="Click" 
-		android:layout_gravity="center"
-		></Button>
-
+	
+	<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:padding="10px"
+			>
+			<Button
+			android:id="@+id/buttonUpload"
+			android:layout_width="100px"
+			android:layout_height="50px"
+			android:text="upload"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			>
+			</Button>
+			<Button
+			android:id="@+id/buttonClick"
+			android:layout_width="100px"
+			android:layout_height="50px"
+			android:text="Click"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			>
+			</Button>
+		</RelativeLayout>
 </LinearLayout>

@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -30,6 +31,7 @@ import com.Android.R;
 import com.Android.peopleRecognize.GetImage.PictureNode;
 import com.Android.peopleRecognize.Preview;
 
+
 public class CameraMain extends Activity {
 	private static final String TAG = "CameraDemo";
 	private static final int DIALOG1 = 1;
@@ -40,7 +42,8 @@ public class CameraMain extends Activity {
 	private CameraMain camera;
 	private Preview preview;
 	
-	private Button buttonClick;	
+	private Button buttonClick;
+	private Button buttonUpload;
 	private Button selectButton;
 
 	private EditText location;
@@ -50,6 +53,8 @@ public class CameraMain extends Activity {
 	private Bitmap image;
 	private PictureNode picnode;
 	
+	private String[] detail = new String[3];
+	
 	private static final String IMAGE_PATH = android.os.Environment
 	.getExternalStorageDirectory().getAbsolutePath() + "/faceRecognizeIMAGE";
 	
@@ -58,6 +63,7 @@ public class CameraMain extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.camera);
+				
 		Log.d(TAG, "begin");
 		preview = new Preview(this);//get the picture
 		((FrameLayout) findViewById(R.id.preview)).addView(preview);
@@ -86,6 +92,8 @@ public class CameraMain extends Activity {
 	private void find_and_modify_view() {
 		//take photo
 		buttonClick = (Button) findViewById(R.id.buttonClick);
+		buttonUpload = (Button) findViewById(R.id.buttonUpload);
+		
 		buttonClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				preview.camera.takePicture(shutterCallback, rawCallback,jpegCallback);
@@ -103,10 +111,15 @@ public class CameraMain extends Activity {
 					}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
 						public void onClick(
 								DialogInterface dialoginterface, int i){
-							
+							dialoginterface.dismiss();
 						}
 					}).show();					
 				}
+			}
+		});	
+		buttonUpload.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				showDialog(DIALOG1);								
 			}
 		});	
 	}
@@ -121,13 +134,21 @@ public class CameraMain extends Activity {
 		note = (EditText) textEntryView.findViewById(R.id.note);
 		file = (EditText) textEntryView.findViewById(R.id.file);
 		file.setText(IMAGE_PATH + currentImageName + ".jpg");
+		
 		selectButton = (Button) textEntryView.findViewById(R.id.select);
 		selectButton.setOnClickListener( new OnClickListener() {
 			public void onClick(View v) {
 				//select image from sdcard
-				
+				detail[0] = String.valueOf(location.getText());
+				detail[1] = String.valueOf(note.getText());
+				detail[2] = String.valueOf(file.getText());
+				Intent intent = new Intent(CameraMain.this, SelectPhoto.class);
+				intent.putExtra("currentDetail",detail );
+				startActivity(intent);
+				finish();
 			}	
 		});
+		
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setIcon(R.drawable.icon);
@@ -144,11 +165,11 @@ public class CameraMain extends Activity {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} 
-						ImageView jpgView = new ImageView(CameraMain.this);
-						jpgView.setImageBitmap(image);
-						AlertDialog alertdialog = null;
-						alertdialog.setView(jpgView);
-						alertdialog.show();
+//						ImageView jpgView = new ImageView(CameraMain.this);
+//						jpgView.setImageBitmap(image);						
+//						new AlertDialog.Builder(CameraMain.this).setView(jpgView).setPositiveButton("确定",
+//								null).show();
+						
 //						picnode.image = image;
 //						picnode.description = String.valueOf(note.getText());
 //						picnode.location = String.valueOf(location.getText());
@@ -160,9 +181,10 @@ public class CameraMain extends Activity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						setTitle("点击了对话框上的取消按钮");
+						dialog.dismiss();
 					}
 				});
-		return builder.create();		
+		return builder.create();	
 	};
 	
 	ShutterCallback shutterCallback = new ShutterCallback() {
