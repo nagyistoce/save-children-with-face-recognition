@@ -15,6 +15,7 @@
         <activity android:name="com.Android.weibo.WeiboMain"></activity>
         <activity android:name="com.Android.app.Setting"></activity>
         <activity android:name="com.Android.app.HelpMenu"></activity>
+        <activity android:name="com.Android.peopleRecognize.SelectPhoto"></activity>
 	
     </application>
     
