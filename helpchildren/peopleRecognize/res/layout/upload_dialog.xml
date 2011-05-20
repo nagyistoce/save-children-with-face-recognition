@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="当前位置"
+    />
+    
+    <EditText
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:id="@+id/location"
+    />
+    
+    
+    <TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="其它备注"
+    />
+    
+    <EditText
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:id="@+id/note"
+    />
+
+ 	<TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="图片"
+    />
+    <LinearLayout  
+	android:orientation="horizontal"   	
+	android:layout_width="fill_parent"
+    android:layout_height="wrap_content"  >
+	    <EditText
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content" 
+	    android:id="@+id/file"
+	    />
+		<Button
+	     android:layout_width="wrap_content" 
+	     android:layout_height="wrap_content"
+	     android:text="..."
+	     android:id="@+id/select"
+	  	/>
+   	</LinearLayout>
+</LinearLayout>

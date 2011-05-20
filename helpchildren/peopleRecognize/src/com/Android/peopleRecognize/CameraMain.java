@@ -8,26 +8,47 @@ import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.Android.R;
+import com.Android.peopleRecognize.GetImage.PictureNode;
 import com.Android.peopleRecognize.Preview;
 
 public class CameraMain extends Activity {
 	private static final String TAG = "CameraDemo";
-	CameraMain camera;
-	Preview preview;
-	Button buttonClick;
+	private static final int DIALOG1 = 1;
+	private static final int DIALOG2 = 2;
+	private String currentImageName;
+	private String address;
+	
+	private CameraMain camera;
+	private Preview preview;
+	
+	private Button buttonClick;	
+	private Button selectButton;
+
+	private EditText location;
+	private EditText note;
+	private EditText file;
+
+	private Bitmap image;
+	private PictureNode picnode;
 	
 	private static final String IMAGE_PATH = android.os.Environment
 	.getExternalStorageDirectory().getAbsolutePath() + "/faceRecognizeIMAGE";
@@ -48,8 +69,22 @@ public class CameraMain extends Activity {
 				Log.d("dir create", "success    " + IMAGE_PATH);
 			else
 				Log.d("dir create", "fail     " + IMAGE_PATH);
+		}	
+		find_and_modify_view();
+		Log.d(TAG, "onCreate'd");		
+	};
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch(id){
+		case 1:
+			return buildDialog1(CameraMain.this);	
 		}
-		
+		return null;
+	}
+	
+	private void find_and_modify_view() {
+		//take photo
 		buttonClick = (Button) findViewById(R.id.buttonClick);
 		buttonClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -61,21 +96,75 @@ public class CameraMain extends Activity {
 					.setPositiveButton(R.string.ok,new android.content.DialogInterface.OnClickListener(){
 						public void onClick(
 								DialogInterface dialoginterface, int i){
-							//todo
+							Log.d(TAG, "select photo");
+							//get current location
+							showDialog(DIALOG1);
 						}
 					}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
 						public void onClick(
 								DialogInterface dialoginterface, int i){
 							
 						}
-					}).show();
-					}
+					}).show();					
 				}
-		});
-
-		Log.d(TAG, "onCreate'd");
+			}
+		});	
 	}
-
+	
+	
+	private Dialog buildDialog1(Context context) {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		final View textEntryView = inflater.inflate(
+				R.layout.upload_dialog, null);
+		
+		location = (EditText)textEntryView.findViewById(R.id.location);
+		note = (EditText) textEntryView.findViewById(R.id.note);
+		file = (EditText) textEntryView.findViewById(R.id.file);
+		file.setText(IMAGE_PATH + currentImageName + ".jpg");
+		selectButton = (Button) textEntryView.findViewById(R.id.select);
+		selectButton.setOnClickListener( new OnClickListener() {
+			public void onClick(View v) {
+				//select image from sdcard
+				
+			}	
+		});
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setIcon(R.drawable.icon);
+//		builder.setTitle(R.string.alert_dialog_text_entry);
+		builder.setView(textEntryView);
+		builder.setPositiveButton("upload",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						//get the pic
+						try {
+							image = GetImage.loadBitmap(IMAGE_PATH + currentImageName + ".jpg");
+							//Log.d(TAG, image.toString());
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+						ImageView jpgView = new ImageView(CameraMain.this);
+						jpgView.setImageBitmap(image);
+						AlertDialog alertdialog = null;
+						alertdialog.setView(jpgView);
+						alertdialog.show();
+//						picnode.image = image;
+//						picnode.description = String.valueOf(note.getText());
+//						picnode.location = String.valueOf(location.getText());
+						//upload
+						
+					}
+				});
+		builder.setNegativeButton("cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						setTitle("点击了对话框上的取消按钮");
+					}
+				});
+		return builder.create();		
+	};
+	
 	ShutterCallback shutterCallback = new ShutterCallback() {
 		public void onShutter() {
 			Log.d(TAG, "onShutter'd");
@@ -90,6 +179,7 @@ public class CameraMain extends Activity {
 			Log.d(TAG, "onPictureTaken - raw");
 		}
 	};
+	
 
 	/** Handles data for jpeg picture */
 	PictureCallback jpegCallback = new PictureCallback() {
@@ -100,7 +190,8 @@ public class CameraMain extends Activity {
 			try {
 			//	String pathName="/sdcard/faceRecognizeImageFile/";
 			    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");     
-			    String fileName = sDateFormat.format(new java.util.Date());  		    
+			    String fileName = sDateFormat.format(new java.util.Date()); 
+			    currentImageName = fileName;
 			    Log.d(TAG + "testing", fileName);
 			    //Toast.makeText(cameraDemo.this, fileName, Toast.LENGTH_LONG);
 				// write to local sandbox file system
@@ -122,5 +213,4 @@ public class CameraMain extends Activity {
 			Log.d(TAG, "onPictureTaken - jpeg");
 		}
 	};
-
 }
