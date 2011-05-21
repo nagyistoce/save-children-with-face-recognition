@@ -41,6 +41,7 @@ public class SelectPhoto extends ListActivity {
 	private Button selectPathButton;
 	
 	private Bitmap image;
+	private byte[] bytes = new byte[4096];
 	
 	private static final String IMAGE_PATH = android.os.Environment
 	.getExternalStorageDirectory().getAbsolutePath() + "/faceRecognizeIMAGE";
@@ -50,7 +51,7 @@ public class SelectPhoto extends ListActivity {
 		Bundle bundle = getIntent().getExtras();
 		currentDetail = bundle.getStringArray("currentDetail");
 		
-		pictureList = GetImage.getPictures(IMAGE_PATH);
+		pictureList = GetImage.getPicturesList(IMAGE_PATH);
 		if (pictureList != null) {
 			Log.d(TAG, "list.size = " + pictureList.size());
 			initListView();
@@ -61,24 +62,6 @@ public class SelectPhoto extends ListActivity {
 		}		
 	}
 	
-//    private void initListView()   {      
-//        listItems = new ArrayList<HashMap<String, Object>>();   
-//         for(int i=0;i<10;i++)      
-//         {      
-//             HashMap<String, Object> map = new HashMap<String, Object>();      
-//             map.put("ItemTitle", "Music： "+i);     //文字   
-//             map.put("ItemImage", R.drawable.music);//图片      
-//             listItems.add(map);      
-//         }      
-//         //生成适配器的Item和动态数组对应的元素      
-//         listItemAdapter = new SimpleAdapter(this,listItems,//数据源       
-//             R.layout.list_item,//ListItem的XML布局实现      
-//             //动态数组与ImageItem对应的子项              
-//             new String[] {"ItemTitle", "ItemImage"},       
-//             //ImageItem的XML文件里面的一个ImageView,两个TextView ID      
-//             new int[] {R.id.ItemTitle, R.id.ItemImage}      
-//         );      
-//    }   
 	 /**  
      * 设置适配器内容  
      */  
@@ -87,20 +70,18 @@ public class SelectPhoto extends ListActivity {
 	      for(int i = 0; i < pictureList.size(); i++)      
 	      {      
 	          HashMap<String, Object> map = new HashMap<String, Object>();      
-	          map.put("ItemTitle", pictureList.get(i));     //文字     	          
+	          map.put("ItemTitle", pictureList.get(i));           
               BitmapFactory.Options options = new BitmapFactory.Options();
               options.inSampleSize = 4;
               Bitmap bm = BitmapFactory.decodeFile(pictureList.get(i), options);
-              map.put("ItemImage", bm);//图片
+              map.put("ItemImage", bm);
 	          
 	          listItems.add(map);      
 	      } 
 	     //生成适配器的Item和动态数组对应的元素      
-	     listItemAdapter = new SimpleAdapter(this,listItems,//数据源       
-	    		 R.layout.pic_list,//ListItem的XML布局实现      
-	           //动态数组与ImageItem对应的子项              
-	           new String[] {"ItemTitle", "ItemImage"},       
-	           //ImageItem的XML文件里面的一个ImageView,两个TextView ID      
+	     listItemAdapter = new SimpleAdapter(this,listItems,     
+	    		 R.layout.pic_list,              
+	           new String[] {"ItemTitle", "ItemImage"},            
 	           new int[] {R.id.pic_path, R.id.img}  
 	     );      
     }  
@@ -125,7 +106,7 @@ public class SelectPhoto extends ListActivity {
 		location2.setText(currentDetail[0]);
 		note2.setText(currentDetail[1]);
 		file2.setText(currentDetail[2]);
-		//selectPathButton.setVisibility(View.GONE);
+		selectPathButton.setVisibility(View.GONE);
 		
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(SelectPhoto.this);
@@ -137,7 +118,8 @@ public class SelectPhoto extends ListActivity {
 						//get the pic
 						try {
 							image = GetImage.loadBitmap(currentDetail[2]);
-							//Log.d(TAG, image.toString());
+							BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+							Log.d(TAG, bytes.toString());
 						} catch (FileNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

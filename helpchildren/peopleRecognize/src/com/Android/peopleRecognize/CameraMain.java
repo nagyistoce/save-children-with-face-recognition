@@ -32,6 +32,7 @@ import com.Android.googleearth.GPSManager;
 import com.Android.main.Main;
 import com.Android.peopleRecognize.GetImage.PictureNode;
 import com.Android.peopleRecognize.Preview;
+import com.Android.peopleRecognize.PostPhoto.FormFile;;;
 
 
 public class CameraMain extends Activity {
@@ -57,6 +58,7 @@ public class CameraMain extends Activity {
 	private PictureNode picnode;
 	
 	private String[] detail = new String[3];
+	private byte[] bytes = new byte[4096];
 	
 	private static final String IMAGE_PATH = android.os.Environment
 	.getExternalStorageDirectory().getAbsolutePath() + "/faceRecognizeIMAGE";
@@ -131,7 +133,7 @@ public class CameraMain extends Activity {
 	
 	private Dialog buildDialog1(Context context) {
 		//get current location	
-		getCurrenLocation();
+//		getCurrenLocation();
 		LayoutInflater inflater = LayoutInflater.from(this);
 		final View textEntryView = inflater.inflate(
 				R.layout.upload_dialog, null);
@@ -158,19 +160,29 @@ public class CameraMain extends Activity {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setIcon(R.drawable.icon);
-//		builder.setTitle(R.string.alert_dialog_text_entry);
 		builder.setView(textEntryView);
 		builder.setPositiveButton("upload",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+						detail[0] = String.valueOf(location.getText());
+						detail[1] = String.valueOf(note.getText());
+						detail[2] = String.valueOf(file.getText());
 						//get the pic
-						try {
+/*						try {
 							image = GetImage.loadBitmap(IMAGE_PATH + currentImageName + ".jpg");
-							//Log.d(TAG, image.toString());
+							FileInputStream fStream = new FileInputStream(IMAGE_PATH + currentImageName + ".jpg");
+							bytes = GetImage.getBytesFromInputStream(fStream, 3500000);
+							Log.d(TAG, bytes.toString());
 						} catch (FileNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} 
+						catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+*/
+						
 //						ImageView jpgView = new ImageView(CameraMain.this);
 //						jpgView.setImageBitmap(image);						
 //						new AlertDialog.Builder(CameraMain.this).setView(jpgView).setPositiveButton("È·¶¨",
@@ -179,9 +191,13 @@ public class CameraMain extends Activity {
 //						picnode.image = image;
 //						picnode.description = String.valueOf(note.getText());
 //						picnode.location = String.valueOf(location.getText());
-						//upload
 						
-					}
+						//get byte
+						
+						/*upload*/				            
+			            FormFile file = new FormFile(detail[2], bytes, "image", "image/jpg");			            
+						String response = PostPhoto.post(detail[2], file);
+					}					
 				});
 		builder.setNegativeButton("cancel",
 				new DialogInterface.OnClickListener() {
@@ -205,7 +221,6 @@ public class CameraMain extends Activity {
     		
     		msg.append(", Longitude: ");
     		msg.append(Double.toString(mGpsManager.getCurrentLocation().getLongitude()));  		
-//    		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     		address = msg.toString();
     		detail[0] = address;
 		}
