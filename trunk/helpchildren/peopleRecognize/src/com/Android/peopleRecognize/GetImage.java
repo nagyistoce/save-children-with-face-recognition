@@ -24,7 +24,7 @@ import android.util.Log;
 
 public class GetImage {
 	private static final String TAG = "GetImage";
-	private static String actionUrl = " http://localhost:8080/FaceRec/upload/imgUpload.action";
+	private static String actionUrl = " http://192.168.0.36:8080/FaceRec/upload/Upload.jsp";
 	private static String newName = "image.jpg";
 	
 	public static Bitmap loadBitmap(String url) throws FileNotFoundException{

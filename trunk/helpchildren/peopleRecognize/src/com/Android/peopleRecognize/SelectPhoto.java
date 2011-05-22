@@ -1,11 +1,14 @@
 package com.Android.peopleRecognize;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.Android.R;
+import com.Android.peopleRecognize.PostPhoto.FormFile;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -42,9 +45,12 @@ public class SelectPhoto extends ListActivity {
 	
 	private Bitmap image;
 	private byte[] bytes = new byte[4096];
+	String response; 
 	
 	private static final String IMAGE_PATH = android.os.Environment
 	.getExternalStorageDirectory().getAbsolutePath() + "/faceRecognizeIMAGE";
+	
+	private static String actionUrl = "http://192.168.0.67:8080/FaceRec/upload/imgUpload";
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,22 +120,50 @@ public class SelectPhoto extends ListActivity {
 		builder.setView(textEntryView2);
 		builder.setPositiveButton("upload",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
+					public void onClick(DialogInterface dialog, int whichButton) {											
+						currentDetail[0] = String.valueOf(location2.getText());
+						currentDetail[1] = String.valueOf(note2.getText());
+						currentDetail[2] = String.valueOf(file2.getText());
+						
+						/*upload*/	
+						FileInputStream fStream;
+						try {
+							fStream = new FileInputStream(currentDetail[2]);
+							bytes = GetImage.getBytesFromInputStream(fStream, 3500000);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							Toast.makeText(SelectPhoto.this, "文件不存在！", Toast.LENGTH_LONG);
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}	
 						//get the pic
 						try {
 							image = GetImage.loadBitmap(currentDetail[2]);
-							BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-							Log.d(TAG, bytes.toString());
 						} catch (FileNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} 
-						ImageView jpgView = new ImageView(SelectPhoto.this);
-						jpgView.setImageBitmap(image);						
-						new AlertDialog.Builder(SelectPhoto.this).setView(jpgView).setPositiveButton("确定",
-								null).show();						
-						//upload
+						if (image == null) {
+							Toast.makeText(SelectPhoto.this, "文件不存在！", Toast.LENGTH_LONG);
+						} else {
+							ImageView jpgView = new ImageView(SelectPhoto.this);
+							jpgView.setImageBitmap(image);						
+							new AlertDialog.Builder(SelectPhoto.this).setView(jpgView).setPositiveButton("确定",
+									null).show();
+						}
 						
+			            FormFile file = new FormFile(currentDetail[2], bytes, "image", "image/pjpeg");			            
+						response = PostPhoto.post(actionUrl, file);
+						
+						if ("".equals(response)) {
+							new AlertDialog.Builder(SelectPhoto.this)
+							.setTitle("提示：")
+							.setMessage("上传失败！")
+							.setPositiveButton(R.string.ok,null)
+							.show();
+						}	
 					}
 				});
 		builder.setNegativeButton("cancel",
