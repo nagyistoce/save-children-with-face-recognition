@@ -1,6 +1,7 @@
 package com.Android.peopleRecognize;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -59,7 +60,10 @@ public class CameraMain extends Activity {
 	
 	private String[] detail = new String[3];
 	private byte[] bytes = new byte[4096];
+	String response;
 	
+	private static String actionUrl = "http://192.168.0.67:8080/FaceRec/upload/imgUpload";
+
 	private static final String IMAGE_PATH = android.os.Environment
 	.getExternalStorageDirectory().getAbsolutePath() + "/faceRecognizeIMAGE";
 	
@@ -183,20 +187,52 @@ public class CameraMain extends Activity {
 						}
 */
 						
-//						ImageView jpgView = new ImageView(CameraMain.this);
-//						jpgView.setImageBitmap(image);						
-//						new AlertDialog.Builder(CameraMain.this).setView(jpgView).setPositiveButton("确定",
-//								null).show();
-						
 //						picnode.image = image;
 //						picnode.description = String.valueOf(note.getText());
 //						picnode.location = String.valueOf(location.getText());
 						
 						//get byte
 						
-						/*upload*/				            
-			            FormFile file = new FormFile(detail[2], bytes, "image", "image/jpg");			            
-						String response = PostPhoto.post(detail[2], file);
+						/*upload*/	
+						FileInputStream fStream;
+						try {
+							fStream = new FileInputStream(detail[2]);
+							bytes = GetImage.getBytesFromInputStream(fStream, 3500000);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							Toast.makeText(CameraMain.this, "文件不存在！", Toast.LENGTH_LONG);
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						try {
+							image = GetImage.loadBitmap(detail[2]);															
+							
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}	
+						
+						if (image == null) {
+							Toast.makeText(CameraMain.this, "文件不存在！", Toast.LENGTH_LONG);
+						} else {
+							ImageView jpgView = new ImageView(CameraMain.this);
+							jpgView.setImageBitmap(image);						
+							new AlertDialog.Builder(CameraMain.this).setView(jpgView).setPositiveButton("确定",
+									null).show();
+						}
+						
+						if ("".equals(response)) {
+							new AlertDialog.Builder(CameraMain.this)
+							.setMessage("上传失败！")
+							.setPositiveButton(R.string.ok,null)
+							.show();
+						}	
+						
+						FormFile file = new FormFile(detail[2], bytes, "image", "image/pjpeg");			            
+						response = PostPhoto.post(actionUrl, file);
+						Log.i("response", response);
 					}					
 				});
 		builder.setNegativeButton("cancel",

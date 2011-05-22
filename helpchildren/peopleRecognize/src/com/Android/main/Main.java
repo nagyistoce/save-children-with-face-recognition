@@ -59,8 +59,9 @@ public class Main extends TabActivity {
         Intent intent = new Intent(this, CameraMain.class);
         mTabHost = getTabHost(); 
         //mTabHost.setBackgroundColor(0xFFE4B500);
-        //mTabHost.setBackgroundColor(0xff000000);
-        mTabHost.setBackgroundResource(R.drawable.backgroup);
+        //mTabHost.setBackgroundColor(0xffffffff);
+//        mTabHost.setBackgroundResource(R.drawable.backgroup);
+        
         mSpec = mTabHost.newTabSpec(TAB_CAMERA)
         				.setIndicator("едуу")//,getResources().getDrawable(R.drawable.tab2))
         				.setContent(intent);
