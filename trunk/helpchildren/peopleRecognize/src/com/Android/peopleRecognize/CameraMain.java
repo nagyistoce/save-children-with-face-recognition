@@ -88,6 +88,7 @@ public class CameraMain extends Activity {
 				Log.d("dir create", "fail     " + IMAGE_PATH);
 		}	
 		find_and_modify_view();
+//		Preview.camera.release();
 		Log.d(TAG, "onCreate'd");		
 	};
 	
@@ -107,7 +108,7 @@ public class CameraMain extends Activity {
 		
 		buttonClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				preview.camera.takePicture(shutterCallback, rawCallback,jpegCallback);
+				preview.camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 				if(jpegCallback != null)
 				{
 					new AlertDialog.Builder(CameraMain.this)
@@ -137,7 +138,11 @@ public class CameraMain extends Activity {
 	
 	private Dialog buildDialog1(Context context) {
 		//get current location	
-//		getCurrenLocation();
+//		detail[0] = getCurrenLocation();
+//		if (detail[0] == null) {
+//			Toast.makeText(this, "正在获取您的位置，请稍候……", Toast.LENGTH_SHORT).show();
+//		}
+		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		final View textEntryView = inflater.inflate(
 				R.layout.upload_dialog, null);
@@ -145,7 +150,8 @@ public class CameraMain extends Activity {
 		location = (EditText)textEntryView.findViewById(R.id.location);
 		note = (EditText) textEntryView.findViewById(R.id.note);
 		file = (EditText) textEntryView.findViewById(R.id.file);
-		file.setText(IMAGE_PATH + currentImageName + ".jpg");
+		file.setText(IMAGE_PATH + "/" + currentImageName + ".jpg");
+		location.setText(detail[0]);
 		
 		selectButton = (Button) textEntryView.findViewById(R.id.select);
 		selectButton.setOnClickListener( new OnClickListener() {
@@ -155,8 +161,9 @@ public class CameraMain extends Activity {
 				detail[1] = String.valueOf(note.getText());
 				detail[2] = String.valueOf(file.getText());
 				Intent intent = new Intent(CameraMain.this, SelectPhoto.class);
-				intent.putExtra("currentDetail",detail );
+				intent.putExtra("currentDetail", detail);
 				startActivity(intent);
+//				Preview.camera.release();
 				finish();
 			}	
 		});
@@ -244,23 +251,6 @@ public class CameraMain extends Activity {
 				});
 		return builder.create();	
 	};
-	
-	private void getCurrenLocation() {
-		// TODO Auto-generated method stub
-		if( mGpsManager.isGPSEnable() && mGpsManager.getCurrentLocation() == null ){
-			Toast.makeText(this, "正在获取您的位置，请稍候……", Toast.LENGTH_SHORT).show();						
-		}else if( mGpsManager.isGPSEnable() && mGpsManager.getCurrentLocation() != null ){			
-			StringBuffer msg = new StringBuffer();
-    		//获取经纬度
-    		msg.append("Latitude: ");
-    		msg.append(Double.toString(mGpsManager.getCurrentLocation().getLatitude()));
-    		
-    		msg.append(", Longitude: ");
-    		msg.append(Double.toString(mGpsManager.getCurrentLocation().getLongitude()));  		
-    		address = msg.toString();
-    		detail[0] = address;
-		}
-	}
 
 	ShutterCallback shutterCallback = new ShutterCallback() {
 		public void onShutter() {
@@ -285,19 +275,15 @@ public class CameraMain extends Activity {
 			// TODO Auto-generated method stub
 			FileOutputStream outStream = null;
 			try {
-			//	String pathName="/sdcard/faceRecognizeImageFile/";
 			    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");     
 			    String fileName = sDateFormat.format(new java.util.Date()); 
 			    currentImageName = fileName;
 			    Log.d(TAG + "testing", fileName);
-			    //Toast.makeText(cameraDemo.this, fileName, Toast.LENGTH_LONG);
 				// write to local sandbox file system
-				// outStream = CameraDemo.this.openFileOutput(String.format("%d.jpg",System.currentTimeMillis()), 0);
-				
+//				outStream = CameraDemo.this.openFileOutput(String.format("%d.jpg",System.currentTimeMillis()), 0);				
 				// Or write to sdcard
 				outStream = new FileOutputStream(String.format(
 						IMAGE_PATH + "/" + fileName + ".jpg", System.currentTimeMillis()));
-				//		"/sdcard/camera1.jpg", System.currentTimeMillis()));
 				outStream.write(data);
 				outStream.close();
 				Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length);

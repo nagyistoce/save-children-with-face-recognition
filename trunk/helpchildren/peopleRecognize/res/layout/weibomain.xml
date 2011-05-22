@@ -31,7 +31,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="密   码:"
-			android:textColor="#ff000000"/>
+			android:textColor="#ff000000"
+			/>
 		<EditText
 			android:layout_marginTop="30dip"
 			android:layout_marginLeft="15dip"
@@ -53,6 +54,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:checked="true"
+			android:textColor="#ff000000"
 			android:text="记住密码"/>
 		<CheckBox
 			android:id="@+id0/autologin"
@@ -61,6 +63,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:checked="true"
+			android:textColor="#ff000000"
 			android:text="自动登陆"/>
 	</LinearLayout>
 	

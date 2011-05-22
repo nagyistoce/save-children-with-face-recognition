@@ -59,7 +59,7 @@ public class Main extends TabActivity {
         Intent intent = new Intent(this, CameraMain.class);
         mTabHost = getTabHost(); 
         //mTabHost.setBackgroundColor(0xFFE4B500);
-        //mTabHost.setBackgroundColor(0xffffffff);
+        mTabHost.setBackgroundColor(0xffffffff);
 //        mTabHost.setBackgroundResource(R.drawable.backgroup);
         
         mSpec = mTabHost.newTabSpec(TAB_CAMERA)
@@ -110,9 +110,9 @@ public class Main extends TabActivity {
 
 		@Override
 		public void onTabChanged(String tabId) {
-			if( mCircleX==null ){
-	    		mCircleX=new int[3];
-	    		for( int i=0; i<3; i++ ){
+			if( mCircleX == null ){
+	    		mCircleX = new int[3];
+	    		for( int i = 0; i < 3; i++ ){
 	            	mCircleX[i] = mCircles[i].getLeft();
 	                Log.e(TAG, i + " " + mCircleX[i]);
 	            }
@@ -132,14 +132,14 @@ public class Main extends TabActivity {
     
     Animation getNowAnimation( final int target ){
     	Log.e(TAG, "target:" + target + " cur:" + mCurSelect);
-    	if( target==mCurSelect )
+    	if( target == mCurSelect )
     		return null;
     	
     	TranslateAnimation animation;
-    	if( target-mCurSelect>0 )
-    		 animation = new TranslateAnimation(0, mCircleX[target-mCurSelect], 0, 0);
+    	if( target - mCurSelect > 0 )
+    		 animation = new TranslateAnimation(0, mCircleX[target - mCurSelect], 0, 0);
     	else {
-			animation = new TranslateAnimation(0, -mCircleX[mCurSelect-target], 0, 0);
+			animation = new TranslateAnimation(0, -mCircleX[mCurSelect - target], 0, 0);
 		}
     	animation.setInterpolator( AnimationUtils.loadInterpolator(Main.this,
                 android.R.anim.accelerate_interpolator) );
